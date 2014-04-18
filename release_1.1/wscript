@@ -1,0 +1,42 @@
+## -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+    module = bld.create_ns3_module('p1906', ['network', 'spectrum'])
+    module.source = [
+    	'helper/p1906-helper.cc',
+    	'model/p1906-medium.cc',
+    	'model/p1906-net-device.cc',
+    	'model/p1906-message-carrier.cc',
+    	'model/p1906-field.cc',
+    	'model/p1906-force.cc',
+    	'model/p1906-perturbation.cc',
+    	'model/p1906-specificity.cc',
+    	'model/p1906-communication-interface.cc',
+    	'model/p1906-transmitter-communication-interface.cc',
+    	'model/p1906-receiver-communication-interface.cc'
+    	]
+
+    module_test = bld.create_ns3_module_test_library('p1906')
+    module_test.source = [
+        ]
+    headers = bld(features='ns3header')
+    headers.module = 'p1906'
+    headers.source = [
+        'helper/p1906-helper.h',
+        'model/p1906-medium.h',
+    	'model/p1906-net-device.h',
+    	'model/p1906-communication-interface.h',
+    	'model/p1906-transmitter-communication-interface.h',
+    	'model/p1906-receiver-communication-interface.h',
+		'model/p1906-message-carrier.h',
+    	'model/p1906-field.h',
+    	'model/p1906-force.h',
+    	'model/p1906-perturbation.h',
+    	'model/p1906-specificity.h',
+    	]
+
+    if (bld.env['ENABLE_EXAMPLES']):
+      bld.recurse('examples')
+
+    bld.ns3_python_bindings()
+    
