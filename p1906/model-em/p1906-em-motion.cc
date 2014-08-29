@@ -1,33 +1,39 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
- * Copyright (c) 2014 TELEMATICS LAB. DEI - Politecnico di Bari
+ *  Copyright © 2014 by IEEE.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation;
+ *  This source file is an essential part of IEEE Std 1906.1,
+ *  Recommended Practice for Nanoscale and Molecular
+ *  Communication Framework.
+ *  Verbatim copies of this source file may be used and
+ *  distributed without restriction. Modifications to this source
+ *  file as permitted in IEEE Std 1906.1 may also be made and
+ *  distributed. All other uses require permission from the IEEE
+ *  Standards Department (stds-ipr@ieee.org). All other rights
+ *  reserved.
  *
- * This program is distributed in the hope that it will be useful.
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not. write to the Free Software
- * Foundation. Inc.. 59 Temple Place. Suite 330. Boston. MA  02111-1307  USA
+ *  This source file is provided on an AS IS basis.
+ *  The IEEE disclaims ANY WARRANTY EXPRESS OR IMPLIED INCLUDING
+ *  ANY WARRANTY OF MERCHANTABILITY AND FITNESS FOR USE FOR A
+ *  PARTICULAR PURPOSE.
+ *  The user of the source file shall indemnify and hold
+ *  IEEE harmless from any damages or liability arising out of
+ *  the use thereof.
  *
  * Author: Giuseppe Piro - Telematics Lab Research Group
- *                         peppe@giuseppepiro.com. g.piro@poliba.it
+ *                         Politecnico di Bari
+ *                         giuseppe.piro@poliba.it
  *                         telematics.poliba.it/piro
  */
 
 #include "ns3/log.h"
 
 #include "p1906-em-motion.h"
-#include "../model-core/p1906-communication-interface.h"
-#include "../model-core/p1906-message-carrier.h"
-#include "../model-core/p1906-field.h"
+#include "ns3/p1906-communication-interface.h"
+#include "ns3/p1906-message-carrier.h"
+#include "ns3/p1906-field.h"
 #include "ns3/mobility-model.h"
-#include "../model-core/p1906-net-device.h"
+#include "ns3/p1906-net-device.h"
 #include <ns3/spectrum-value.h>
 #include "p1906-em-message-carrier.h"
 
@@ -67,7 +73,7 @@ P1906EMMotion::ComputePropagationDelay (Ptr<P1906CommunicationInterface> src,
   double distance = dstMobility->GetDistanceFrom (srcMobility);
   double delay = distance/GetWaveSpeed ();
 
-  NS_LOG_FUNCTION (this << distance << GetWaveSpeed() << delay);
+  NS_LOG_FUNCTION (this << "[d,speed,delay]" << distance << GetWaveSpeed() << delay);
 
   return delay;
 }
@@ -84,7 +90,6 @@ P1906EMMotion::CalculateReceivedMessageCarrier(Ptr<P1906CommunicationInterface> 
   double distances[20] = {
   0.0001, 0.0002, 0.0003, 0.0004, 0.0005, 0.0006, 0.0007, 0.0008, 0.0009, 0.001, 0.0011, 0.0012, 0.0013, 0.0014, 0.0015, 0.0016, 0.0017, 0.0018, 0.0019, 0.002
    };
-
 
   double pathloss[20][11] = {
    {
@@ -155,28 +160,37 @@ P1906EMMotion::CalculateReceivedMessageCarrier(Ptr<P1906CommunicationInterface> 
   Ptr<MobilityModel> dstMobility = dst->GetP1906NetDevice ()->GetNode ()->GetObject<MobilityModel> ();
   double distance = dstMobility->GetDistanceFrom (srcMobility);
 
+  NS_LOG_FUNCTION (this << "[distance]" << distance);
 
   int index_d;
-
   if (distance <= distances [0])
 	index_d = 0;
   else if (distance >= distances [19])
 	  index_d = 19;
   else
-	  for (int i = 0; i < 20; i++)
+    {
+	  index_d = 0;
+	  for (int i = 1; i < 20; i++)
 	    {
-		  if (distance <= distances [i])
-			  index_d = i;
+		  if (distances [i] > distance)
+		    {
+			  index_d = i-1;
+			  i=20;
+		    }
 	    }
+    }
+
+  //NS_LOG_FUNCTION (this << "[index,distance]" << index_d << distances [index_d]);
 
   Ptr<P1906EMMessageCarrier> m = message->GetObject <P1906EMMessageCarrier> ();
   Ptr<SpectrumValue> sv = m->GetSpectrumValue ();
 
+  NS_LOG_FUNCTION (this << "[txPsd]" << *sv);
   for (int i=0; i<11; i++)
-  {
-    (*sv)[i] = (*sv)[i]  - pow(10., pathloss[index_d][i]/10.);
-  }
-
+    {
+      (*sv)[i] = pow(10., ((10*log10 ((*sv)[i])) - pathloss[index_d][i])/10.);
+    }
+  NS_LOG_FUNCTION (this << "[rxPsd]" << *sv);
 
   return message;
 }

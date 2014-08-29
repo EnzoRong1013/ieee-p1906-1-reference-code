@@ -27,41 +27,49 @@
  */
 
 
-
 #include "ns3/log.h"
-#include "ns3/packet.h"
-#include "p1906-perturbation.h"
-#include "p1906-message-carrier.h"
+
+#include "p1906-em-communication-interface.h"
+#include "p1906-em-transmitter-communication-interface.h"
+#include "p1906-em-receiver-communication-interface.h"
+#include <ns3/packet.h>
+#include "ns3/p1906-medium.h"
+#include "ns3/p1906-net-device.h"
+
 
 namespace ns3 {
 
-NS_LOG_COMPONENT_DEFINE ("P1906Perturbation");
+NS_LOG_COMPONENT_DEFINE ("P1906EMCommunicationInterface");
 
-TypeId P1906Perturbation::GetTypeId (void)
+TypeId P1906EMCommunicationInterface::GetTypeId (void)
 {
-  static TypeId tid = TypeId ("ns3::P1906Perturbation")
+  static TypeId tid = TypeId ("ns3::P1906EMCommunicationInterface")
     .SetParent<Object> ();
   return tid;
 }
 
-P1906Perturbation::P1906Perturbation ()
+P1906EMCommunicationInterface::P1906EMCommunicationInterface ()
 {
-  NS_LOG_FUNCTION (this);
+  NS_LOG_FUNCTION (this );
+  SetP1906NetDevice (0);
+  SetP1906Medium (0);
+
+  Ptr<P1906EMTransmitterCommunicationInterface> tx = CreateObject<P1906EMTransmitterCommunicationInterface> ();
+  Ptr<P1906EMReceiverCommunicationInterface> rx = CreateObject<P1906EMReceiverCommunicationInterface> ();
+
+  SetP1906TransmitterCommunicationInterface (tx);
+  SetP1906ReceiverCommunicationInterface (rx);
+  tx->SetP1906CommunicationInterface (this);
+  rx->SetP1906CommunicationInterface (this);
 }
 
-P1906Perturbation::~P1906Perturbation ()
+P1906EMCommunicationInterface::~P1906EMCommunicationInterface ()
 {
   NS_LOG_FUNCTION (this);
-}
-
-Ptr<P1906MessageCarrier>
-P1906Perturbation::CreateMessageCarrier (Ptr<Packet> p)
-{
-  NS_LOG_FUNCTION (this);
-
-  Ptr<P1906MessageCarrier> carrier = CreateObject<P1906MessageCarrier> ();
-  carrier->SetMessage (p);
-  return carrier;
+  SetP1906NetDevice (0);
+  SetP1906Medium (0);
+  SetP1906TransmitterCommunicationInterface (0);
+  SetP1906ReceiverCommunicationInterface (0);
 }
 
 } // namespace ns3

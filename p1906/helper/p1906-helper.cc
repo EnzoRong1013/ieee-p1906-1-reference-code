@@ -1,24 +1,31 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
- * Copyright (c) 2014 TELEMATICS LAB, DEI - Politecnico di Bari
+ *  Copyright © 2014 by IEEE.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation;
+ *  This source file is an essential part of IEEE Std 1906.1,
+ *  Recommended Practice for Nanoscale and Molecular
+ *  Communication Framework.
+ *  Verbatim copies of this source file may be used and
+ *  distributed without restriction. Modifications to this source
+ *  file as permitted in IEEE Std 1906.1 may also be made and
+ *  distributed. All other uses require permission from the IEEE
+ *  Standards Department (stds-ipr@ieee.org). All other rights
+ *  reserved.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  This source file is provided on an AS IS basis.
+ *  The IEEE disclaims ANY WARRANTY EXPRESS OR IMPLIED INCLUDING
+ *  ANY WARRANTY OF MERCHANTABILITY AND FITNESS FOR USE FOR A
+ *  PARTICULAR PURPOSE.
+ *  The user of the source file shall indemnify and hold
+ *  IEEE harmless from any damages or liability arising out of
+ *  the use thereof.
  *
  * Author: Giuseppe Piro - Telematics Lab Research Group
- *                         peppe@giuseppepiro.com, g.piro@poliba.it
+ *                         Politecnico di Bari
+ *                         giuseppe.piro@poliba.it
  *                         telematics.poliba.it/piro
  */
+
 
 #include "p1906-helper.h"
 #include "ns3/simulator.h"
@@ -28,13 +35,23 @@
 #include <string>
 #include "ns3/config.h"
 #include "../model-core/p1906-net-device.h"
+#include "../model-core/p1906-medium.h"
 #include "../model-core/p1906-perturbation.h"
 #include "../model-core/p1906-field.h"
 #include "../model-core/p1906-specificity.h"
-#include "../model-core/p1906-medium.h"
 #include "../model-core/p1906-communication-interface.h"
 #include "../model-core/p1906-transmitter-communication-interface.h"
 #include "../model-core/p1906-receiver-communication-interface.h"
+#include "../model-core/p1906-message-carrier.h"
+#include "../model-em/p1906-em-message-carrier.h"
+#include "../model-em/p1906-em-perturbation.h"
+#include "../model-em/p1906-em-motion.h"
+#include "../model-em/p1906-em-field.h"
+#include "../model-em/p1906-em-specificity.h"
+#include "../model-em/p1906-em-communication-interface.h"
+#include "../model-em/p1906-em-transmitter-communication-interface.h"
+#include "../model-em/p1906-em-receiver-communication-interface.h"
+
 
 NS_LOG_COMPONENT_DEFINE ("P1906Helper");
 
@@ -63,16 +80,26 @@ P1906Helper::Connect (Ptr<Node> n, Ptr<P1906NetDevice> d, Ptr<P1906Medium> m, Pt
 void 
 P1906Helper::EnableLogComponents (void)
 {
+  LogComponentEnable ("P1906NetDevice", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906Medium", LOG_LEVEL_ALL);
+
+  LogComponentEnable ("P1906MessageCarrier", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906CommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906TransmitterCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906ReceiverCommunicationInterface", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906Field", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906Motion", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906Medium", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906MessageCarrier", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906NetDevice", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906Perturbation", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906ReceiverCommunicationInterface", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906Specificity", LOG_LEVEL_ALL);
-  LogComponentEnable ("P1906TransmitterCommunicationInterface", LOG_LEVEL_ALL);
+
+  LogComponentEnable ("P1906EMMessageCarrier", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906EMCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906EMTransmitterCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906EMReceiverCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906EMField", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906EMMotion", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906EMPerturbation", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906EMSpecificity", LOG_LEVEL_ALL);
 
 }
 

@@ -27,61 +27,38 @@
  */
 
 
-#ifndef P1906_COMMUNICATION_INTERFACE
-#define P1906_COMMUNICATION_INTERFACE
+#ifndef P1906_EM_COMMUNICATION_INTERFACE
+#define P1906_EM_COMMUNICATION_INTERFACE
 
 #include "ns3/object.h"
 #include "ns3/nstime.h"
 #include "ns3/ptr.h"
+#include "ns3/p1906-communication-interface.h"
 
 namespace ns3 {
-
-class P1906Medium;
-class P1906NetDevice;
-class P1906ReceiverCommunicationInterface;
-class P1906TransmitterCommunicationInterface;
-class Packet;
 
 
 /**
  * \ingroup P1906 framework
  *
- * \class P1906CommunicationInterface
+ * \class P1906EMCommunicationInterface
  *
  * \brief Base class implementing a communication interface, which
- * is a container of the transmitter and the receiver entities.
+ * is a container of the transmitter and the receiver entities, for
+ * the EM example
  */
 
-class P1906CommunicationInterface : public Object
+class P1906EMCommunicationInterface : public P1906CommunicationInterface
 {
 public:
   static TypeId GetTypeId (void);
 
-  P1906CommunicationInterface ();
-  virtual ~P1906CommunicationInterface ();
-
-  void SetP1906TransmitterCommunicationInterface (Ptr<P1906TransmitterCommunicationInterface> tx);
-  Ptr<P1906TransmitterCommunicationInterface> GetP1906TransmitterCommunicationInterface ();
-
-  void SetP1906ReceiverCommunicationInterface (Ptr<P1906ReceiverCommunicationInterface> rx);
-  Ptr<P1906ReceiverCommunicationInterface> GetP1906ReceiverCommunicationInterface ();
-
-  void SetP1906NetDevice (Ptr<P1906NetDevice> d);
-  Ptr<P1906NetDevice> GetP1906NetDevice ();
-
-  void SetP1906Medium (Ptr<P1906Medium> m);
-  Ptr<P1906Medium> GetP1906Medium ();
-
-  bool HandleTransmission (Ptr<Packet> p);
-  void HandleReception (Ptr<Packet> p);
+  P1906EMCommunicationInterface ();
+  virtual ~P1906EMCommunicationInterface ();
 
 private:
-  Ptr<P1906NetDevice> m_dev;
-  Ptr<P1906TransmitterCommunicationInterface> m_tx;
-  Ptr<P1906ReceiverCommunicationInterface> m_rx;
-  Ptr<P1906Medium> m_medium;
 };
 
 }
 
-#endif /* P1906_COMMUNICATION_INTERFACE */
+#endif /* P1906_EM_COMMUNICATION_INTERFACE */
