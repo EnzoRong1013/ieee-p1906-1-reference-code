@@ -51,7 +51,14 @@
 #include "../model-em/p1906-em-communication-interface.h"
 #include "../model-em/p1906-em-transmitter-communication-interface.h"
 #include "../model-em/p1906-em-receiver-communication-interface.h"
-
+#include "../model-mol/p1906-mol-message-carrier.h"
+#include "../model-mol/p1906-mol-perturbation.h"
+#include "../model-mol/p1906-mol-motion.h"
+#include "../model-mol/p1906-mol-field.h"
+#include "../model-mol/p1906-mol-specificity.h"
+#include "../model-mol/p1906-mol-communication-interface.h"
+#include "../model-mol/p1906-mol-transmitter-communication-interface.h"
+#include "../model-mol/p1906-mol-receiver-communication-interface.h"
 
 NS_LOG_COMPONENT_DEFINE ("P1906Helper");
 
@@ -100,6 +107,16 @@ P1906Helper::EnableLogComponents (void)
   LogComponentEnable ("P1906EMMotion", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906EMPerturbation", LOG_LEVEL_ALL);
   LogComponentEnable ("P1906EMSpecificity", LOG_LEVEL_ALL);
+
+
+  LogComponentEnable ("P1906MOLMessageCarrier", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOLCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOLTransmitterCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOLReceiverCommunicationInterface", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOLField", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOLMotion", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOLPerturbation", LOG_LEVEL_ALL);
+  LogComponentEnable ("P1906MOLSpecificity", LOG_LEVEL_ALL);
 
 }
 

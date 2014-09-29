@@ -23,6 +23,15 @@ def build(bld):
 		'model-em/p1906-em-communication-interface.cc',
     	'model-em/p1906-em-transmitter-communication-interface.cc',
     	'model-em/p1906-em-receiver-communication-interface.cc',
+    	
+    	'model-mol/p1906-mol-field.cc',
+		'model-mol/p1906-mol-motion.cc',
+		'model-mol/p1906-mol-message-carrier.cc',
+		'model-mol/p1906-mol-perturbation.cc',
+		'model-mol/p1906-mol-specificity.cc',
+		'model-mol/p1906-mol-communication-interface.cc',
+    	'model-mol/p1906-mol-transmitter-communication-interface.cc',
+    	'model-mol/p1906-mol-receiver-communication-interface.cc',
     	]
 
     module_test = bld.create_ns3_module_test_library('p1906')
@@ -51,6 +60,15 @@ def build(bld):
 		'model-em/p1906-em-communication-interface.h',
     	'model-em/p1906-em-transmitter-communication-interface.h',
     	'model-em/p1906-em-receiver-communication-interface.h',
+    	
+    	'model-mol/p1906-mol-field.h',
+		'model-mol/p1906-mol-motion.h',
+		'model-mol/p1906-mol-message-carrier.h',
+		'model-mol/p1906-mol-perturbation.h',
+		'model-mol/p1906-mol-specificity.h',
+		'model-mol/p1906-mol-communication-interface.h',
+    	'model-mol/p1906-mol-transmitter-communication-interface.h',
+    	'model-mol/p1906-mol-receiver-communication-interface.h',
     	]
 
     if (bld.env['ENABLE_EXAMPLES']):

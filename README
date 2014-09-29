@@ -31,4 +31,6 @@ A simple example is stored into the ns-3-dev/p1906/example folder
 cp ns-3-dev/p1906/example/first-example.cc scratch
 ./waf --run scratch/first-example
 
+== Run EM or MOLECULAR examples ==
+Have a look to the presentation into the docs folder 
 

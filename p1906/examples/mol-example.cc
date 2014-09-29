@@ -31,7 +31,7 @@
 
 /*
  * Description:
- * this file models the simple example of EM-based communication.
+ * this file models the simple example of MOLECULAR-based communication.
  * xxx: add more comments (i.e., description of the scenario)
  */
 
@@ -40,14 +40,14 @@
 #include "ns3/mobility-module.h"
 #include "ns3/p1906-helper.h"
 #include "ns3/p1906-net-device.h"
-#include "ns3/p1906-em-perturbation.h"
-#include "ns3/p1906-em-field.h"
-#include "ns3/p1906-em-motion.h"
-#include "ns3/p1906-em-specificity.h"
+#include "ns3/p1906-mol-perturbation.h"
+#include "ns3/p1906-mol-field.h"
+#include "ns3/p1906-mol-motion.h"
+#include "ns3/p1906-mol-specificity.h"
 #include "ns3/p1906-medium.h"
-#include "ns3/p1906-em-communication-interface.h"
-#include "ns3/p1906-em-transmitter-communication-interface.h"
-#include "ns3/p1906-em-receiver-communication-interface.h"
+#include "ns3/p1906-mol-communication-interface.h"
+#include "ns3/p1906-mol-transmitter-communication-interface.h"
+#include "ns3/p1906-mol-receiver-communication-interface.h"
 
 using namespace ns3;
 
@@ -56,33 +56,20 @@ int main (int argc, char *argv[])
 {	
 
   //set of parameters
-  double waveSpeed = 3e8; 								//  [m/s]
-  double nodeDistance = 0.001; 							//  [m]
-  double pulseEnergy = 500; 							//  [pJ]
-  double pulseDuration = 100;							//  [fs]
-  double pulseInterval = 100.;							//  [ps]
-  double powerTx = pulseEnergy/(pulseDuration/1000.);	//  [W]
+  double nodeDistance = 0.001; 								//  [m]
+  double nbOfMoleculas = 50000; 							//  [pJ]
+  double pulseInterval = 1.;								//  [ms]
+  double diffusionCoefficient = 1;							//  [nm^2/ns]
 
   CommandLine cmd;
   cmd.AddValue("nodeDistance", "nodeDistance", nodeDistance);
-  cmd.AddValue("pulseEnergy", "pulseEnergy", pulseEnergy);
-  cmd.AddValue("pulseDuration", "pulseDuration", pulseDuration);
+  cmd.AddValue("nbOfMoleculas", "nbOfMoleculas", nbOfMoleculas);
+  cmd.AddValue("diffusionCoefficient", "diffusionCoefficient", diffusionCoefficient);
   cmd.AddValue("pulseInterval", "pulseInterval", pulseInterval);
   cmd.Parse(argc, argv);
 
 
-  /*
-   * From Ke Yang contribution:
-   * For the subchannel of 0.1 THz, the central frequency will be 0.5THz,
-   * 0.6THz, 0.7THz to 1.5 THz; and the overall bandwidth will be 0.45THz
-   * to 1.55THz.
-   */
-  double centralFrequency = 1e12 * (0.45 + (1.55 - 0.45)/2.);	//  [Hz]
-  double bandwidth = 1e12 * (1.55 - 0.45);						//  [Hz]
-  double subChannel = 1e12 * 0.1; 								//  [Hz]
-
-
-  Time::SetResolution(Time::FS);
+  Time::SetResolution(Time::NS);
 
   // Create P1906 Helper
   P1906Helper helper;
@@ -95,36 +82,29 @@ int main (int argc, char *argv[])
 
   // Create a medium and the Motion component
   Ptr<P1906Medium> medium = CreateObject<P1906Medium> ();
-  Ptr<P1906EMMotion> motion = CreateObject<P1906EMMotion> ();
-  motion->SetWaveSpeed (waveSpeed);
+  Ptr<P1906MOLMotion> motion = CreateObject<P1906MOLMotion> ();
+  motion->SetDiffusionCoefficient (diffusionCoefficient);
   medium->SetP1906Motion (motion);
 
   // Create Device 1 and related components/entities
   Ptr<P1906NetDevice> dev1 = CreateObject<P1906NetDevice> ();
-  Ptr<P1906EMCommunicationInterface> c1 = CreateObject<P1906EMCommunicationInterface> ();
-  Ptr<P1906EMSpecificity> s1 = CreateObject<P1906EMSpecificity> ();
-  Ptr<P1906EMField> fi1 = CreateObject<P1906EMField> ();
-  Ptr<P1906EMPerturbation> p1 = CreateObject<P1906EMPerturbation> ();
-  p1->SetBandwidth (bandwidth);
-  p1->SetCentralFrequency (centralFrequency);
-  p1->SetSubChannel (subChannel);
-  p1->SetPowerTransmission (powerTx);
-  p1->SetPulseDuration (FemtoSeconds (pulseDuration));
-  p1->SetPulseInterval (PicoSeconds(pulseInterval));
+  Ptr<P1906MOLCommunicationInterface> c1 = CreateObject<P1906MOLCommunicationInterface> ();
+  Ptr<P1906MOLSpecificity> s1 = CreateObject<P1906MOLSpecificity> ();
+  Ptr<P1906MOLField> fi1 = CreateObject<P1906MOLField> ();
+  Ptr<P1906MOLPerturbation> p1 = CreateObject<P1906MOLPerturbation> ();
+  p1->SetPulseInterval (MilliSeconds(pulseInterval));
+  p1->SetMolecules (nbOfMoleculas);
+  s1->SetDiffusionCoefficient (diffusionCoefficient);
 
   // Create Device 2 and related components/entities
   Ptr<P1906NetDevice> dev2 = CreateObject<P1906NetDevice> ();
-  Ptr<P1906EMCommunicationInterface> c2 = CreateObject<P1906EMCommunicationInterface> ();
-  Ptr<P1906EMSpecificity> s2 = CreateObject<P1906EMSpecificity> ();
-  Ptr<P1906EMField> fi2 = CreateObject<P1906EMField> ();
-  Ptr<P1906EMPerturbation> p2 = CreateObject<P1906EMPerturbation> ();
-  p2->SetBandwidth (bandwidth);
-  p2->SetCentralFrequency (centralFrequency);
-  p2->SetSubChannel (subChannel);
-  p2->SetPowerTransmission (powerTx);
-  p2->SetPulseDuration (FemtoSeconds (pulseDuration));
-  p2->SetPulseInterval (PicoSeconds(pulseInterval));
-
+  Ptr<P1906MOLCommunicationInterface> c2 = CreateObject<P1906MOLCommunicationInterface> ();
+  Ptr<P1906MOLSpecificity> s2 = CreateObject<P1906MOLSpecificity> ();
+  Ptr<P1906MOLField> fi2 = CreateObject<P1906MOLField> ();
+  Ptr<P1906MOLPerturbation> p2 = CreateObject<P1906MOLPerturbation> ();
+  p2->SetPulseInterval (MilliSeconds(pulseInterval));
+  p2->SetMolecules (nbOfMoleculas);
+  s2->SetDiffusionCoefficient (diffusionCoefficient);
 
 
   //set devices positions
